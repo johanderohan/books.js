@@ -23,6 +23,12 @@ var app = express();
       res.render('index', { title: 'Books', booksData: docs });
     });
 	});
+  
+  app.get('/book/:id', function (req, res) {
+    db.findOne({ _id: req.params.id }, function (err, doc) {   
+      res.sendFile(doc.realpath);
+    });
+	});
 
 var server = app.listen(3000, function () {
   var port = server.address().port;

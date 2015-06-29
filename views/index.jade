@@ -6,7 +6,7 @@ block content
       each val in booksData
         div.col-xs-6.col-sm-4.col-md-3
           div.cover
-            a(href='/'+val._id)
+            a(href='book/'+val._id)
               img(src='/covers/'+val._id+'.jpg')
           div.info
             span= val.metadata.title
