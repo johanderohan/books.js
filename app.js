@@ -4,6 +4,7 @@ var fs = require('fs'),
     _ = require('lodash'),
 	  express = require('express'),
     crypto = require('crypto'),
+    lwip = require('lwip'),
 	  bodyParser = require('body-parser'),
   	Datastore = require('nedb'),
     db = new Datastore({ filename: path.join(__dirname+'/data/data.db'), autoload: true });
@@ -38,7 +39,9 @@ var server = app.listen(3000, function () {
 
 
 var firstRun = function () {
-	try{ fs.mkdirSync(__dirname+'/covers'); } catch(e) {/*console.log('/covers alrdey exists');*/}
+  try{ fs.mkdirSync(__dirname+'/covers'); } catch(e) {/*console.log('/covers alrdey exists');*/}
+  try{ fs.mkdirSync(__dirname+'/covers/original'); } catch(e) {/*console.log('/covers alrdey exists');*/}
+	try{ fs.mkdirSync(__dirname+'/covers/small'); } catch(e) {/*console.log('/covers alrdey exists');*/}
 	try{ fs.mkdirSync(__dirname+'/data'); } catch(e) {/*console.log('/data alredy exists');*/}
 	main();
 };
@@ -81,8 +84,17 @@ var loadBooks = function(books,next){
             db.insert(book, function (err, newDoc) {
         			if(epub.metadata.cover){
         				epub.getImage(epub.metadata.cover, function(err, data, mimeType){
-        			        if(mimeType == 'image/jpeg')
-        			        	fs.writeFile(path.join(__dirname+'/covers/'+newDoc._id+'.jpg'), data, function(err) {  });
+        			        if(mimeType == 'image/jpeg') {
+        			        	fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), data, function(err) { 
+                          lwip.open(__dirname+'/covers/original/'+newDoc._id+'.jpg', function(err, image){
+                            image.scale(0.5, function(err, image){
+                              image.toBuffer('jpg', function(err, buffer){
+                                  fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { });
+                              });
+                            });
+                          });
+                        });
+                      }
         			    });
         			}
               
