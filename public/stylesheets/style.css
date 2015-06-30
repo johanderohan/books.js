@@ -1,11 +1,43 @@
 body {
   font: 13px 'Open Sans', sans-serif;
   background-color: rgb(251,251,251);
+  margin-top: 80px;
 }
 
 a {
   color: #333;
   text-decoration: none!important;
+}
+
+div.top-menu {
+  height: 50px;
+  width: 100%;
+  background-color: #fbfbfb;
+  position: fixed;
+  top: 0;
+  border-bottom: 1px solid #eee;
+  z-index: 2;
+  opacity: 0.9;
+  font-size: 2em;
+}
+
+div.empty {
+  margin: 0 auto;
+  text-align: center;
+}
+
+div.empty .ion-ios-book-outline {
+  font-size: 15em;
+  color: #666;
+}
+
+div.empty p {
+  font-size: 1.6em;
+  color: #666;
+}
+
+div.top-menu div {
+  margin-top: 5px;
 }
 
 .container { margin-top: 40px; margin-bottom: 40px; }
@@ -108,6 +140,47 @@ div.book-single span.publisher span+span{
 }
 .style-1 li span {
   text-align: right;
+}
+
+.ion-ios-loop-strong.active{
+  -moz-animation: spinner-loader 1500ms infinite linear;
+  -webkit-animation: spinner-loader 1500ms infinite linear;
+  animation: spinner-loader 1500ms infinite linear;
+}
+
+@-moz-keyframes spinner-loader {
+  0% {
+    -moz-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@-webkit-keyframes spinner-loader {
+  0% {
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
+}
+@keyframes spinner-loader {
+  0% {
+    -moz-transform: rotate(0deg);
+    -ms-transform: rotate(0deg);
+    -webkit-transform: rotate(0deg);
+    transform: rotate(0deg);
+  }
+  100% {
+    -moz-transform: rotate(360deg);
+    -ms-transform: rotate(360deg);
+    -webkit-transform: rotate(360deg);
+    transform: rotate(360deg);
+  }
 }
 
 

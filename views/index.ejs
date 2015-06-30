@@ -17,12 +17,17 @@
 	  <script src="javascripts/app.js"></script>
   </head>
   <body ng-controller="mainController">
-      <script type="text/javascript">
-        var booksData = <%- JSON.stringify(booksData) %>; 
-      </script>
+      <div class="row top-menu">
+        <div class="col-xs-10"></div>
+        <div class="col-xs-2"><a class="ion-ios-loop-strong {{active}}" href ng-click="scan()"></a></div>
+      </div>
       <!-- angular templating -->
   		<!-- this is where content will be injected -->
       <div ng-view></div>
+      <div ng-if="books" class="empty">
+        <div class="ion-ios-book-outline"></div>
+        <p>Tu biblioteca está vacía</p>
+      </div>
       </div>
   </body>
 </html>

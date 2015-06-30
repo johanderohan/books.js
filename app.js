@@ -19,15 +19,30 @@ var app = express();
   app.use(express.static(path.join(__dirname, 'public')));
   app.use('/covers', express.static(__dirname + '/covers'));
 
+
+  //ROUTES
 	app.get('/', function (req, res) {
-    db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
-      res.render('index', { title: 'Books', booksData: docs });
-    });
+    res.render('index', { title: 'Books' });
 	});
   
   app.get('/book/:id', function (req, res) {
     db.findOne({ _id: req.params.id }, function (err, doc) {   
       res.sendFile(doc.realpath);
+    });
+	});
+  
+  //API
+  app.post('/scan', function(req, res){
+    scan(function(){
+      db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+        res.send(docs);
+      });
+    });
+  });
+  
+  app.get('/api/books', function (req, res) {
+    db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+      res.send(docs);
     });
 	});
 
@@ -43,7 +58,7 @@ var firstRun = function () {
   try{ fs.mkdirSync(__dirname+'/covers/original'); } catch(e) {/*console.log('/covers alrdey exists');*/}
 	try{ fs.mkdirSync(__dirname+'/covers/small'); } catch(e) {/*console.log('/covers alrdey exists');*/}
 	try{ fs.mkdirSync(__dirname+'/data'); } catch(e) {/*console.log('/data alredy exists');*/}
-	main();
+	//scan();
 };
 
 var searchEPUB = function(dir) {
@@ -89,7 +104,11 @@ var loadBooks = function(books,next){
                           lwip.open(__dirname+'/covers/original/'+newDoc._id+'.jpg', function(err, image){
                             image.scale(0.5, function(err, image){
                               image.toBuffer('jpg', function(err, buffer){
-                                  fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { });
+                                  fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                    //next
+                                    books.pop();
+                                    loadBooks(books,next);
+                                  });
                               });
                             });
                           });
@@ -97,10 +116,6 @@ var loadBooks = function(books,next){
                       }
         			    });
         			}
-              
-              //next
-              books.pop();
-              loadBooks(books,next);
               
         		});
           } else {
@@ -115,9 +130,9 @@ var loadBooks = function(books,next){
 	epub.parse();
 };
 
-var main = function () {
+var scan = function (next) {
 	var books = searchEPUB(_ROOT);
 	loadBooks(books,function(){
-		console.log('END');
+		next();
 	});
 };
