@@ -8,6 +8,11 @@ var myApp = angular.module('booksApp',['ngRoute'])
     .when('/', {
       templateUrl : 'templates/index.html',
       controller  : 'homeController'
+    })
+    
+    .when('/book/:id', {
+      templateUrl : 'templates/single.html',
+      controller  : 'singleController'
     });
     
 })
@@ -26,12 +31,23 @@ var myApp = angular.module('booksApp',['ngRoute'])
   };
 
 })
+
 .controller('homeController', function($scope,$rootScope,$http) {
   $scope.find = function(){
     $http.get('/api/books').success(function(data){
       $rootScope.books = data;
       if(!data.length) $rootScope.isBooks = true;
       else $rootScope.isBooks = false;
+    });
+  };
+})
+
+.controller('singleController', function($scope,$rootScope,$http,$routeParams) {
+  $scope.find = function(){
+    $http.get('/books/'+$routeParams.id).success(function(data){
+      var year = data.metadata.date.split('-');
+      data.metadata.date = year[0];
+      $scope.book = data;
     });
   };
 });

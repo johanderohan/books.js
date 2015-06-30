@@ -1,0 +1,16 @@
+<div class="container" ng-init="find()">
+  <div class="book-single row">
+      <a href="/download/{{book._id}}" class="col-xs-12 col-sm-4">
+        <span class="ion-ios-cloud-download download"></span>
+        <img ng-src="/covers/original/{{book._id}}.jpg" />
+      </a>
+      <div class="col-xs-12 col-sm-8">
+        <h1 class="col-xs-12 col-sm-12"><span class="title">{{book.metadata.title}}</span></h1>
+        <span class="col-xs-12 col-sm-12 publisher">{{book.metadata.creator}}</span>
+        <div class="col-xs-12 col-sm-12 description">{{book.metadata.description}}</div>
+        <div class="col-xs-12 col-sm-12 subject">{{book.metadata.subject}} <span class="year">{{book.metadata.date}}</span></div>
+      </div>
+  </div>
+</div>
+
+  

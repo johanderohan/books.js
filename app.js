@@ -25,7 +25,13 @@ var app = express();
     res.render('index', { title: 'Books' });
 	});
   
-  app.get('/book/:id', function (req, res) {
+  app.get('/books/:id', function (req, res) {
+    db.findOne({ _id: req.params.id }, function (err, doc) {   
+      res.send(doc);
+    });
+	});
+  
+  app.get('/download/:id', function (req, res) {
     db.findOne({ _id: req.params.id }, function (err, doc) {   
       res.sendFile(doc.realpath);
     });
