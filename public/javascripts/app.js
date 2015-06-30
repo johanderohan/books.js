@@ -14,20 +14,24 @@ var myApp = angular.module('booksApp',['ngRoute'])
 
 .controller('mainController', function($scope,$rootScope,$http) {
   $scope.active = '';
+  $rootScope.isBooks = false;
   $scope.scan = function(){
     $scope.active = 'active';
     $http.post('/scan').success(function(data){
         $rootScope.books = data;
         $scope.active = '';
+        if(!data.length) $rootScope.isBooks = true;
+        else $rootScope.isBooks = false;
     });
   };
 
 })
 .controller('homeController', function($scope,$rootScope,$http) {
-  
   $scope.find = function(){
     $http.get('/api/books').success(function(data){
       $rootScope.books = data;
+      if(!data.length) $rootScope.isBooks = true;
+      else $rootScope.isBooks = false;
     });
   };
 });
