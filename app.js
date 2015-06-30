@@ -13,7 +13,7 @@ var _ROOT = '/Users/johan/Documents/Leidos';
 
 var app = express();
 	app.set('views', path.join(__dirname+'/views'));
-	app.set('view engine', 'jade');
+	app.set('view engine', 'ejs');
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({  extended: true }));
   app.use(express.static(path.join(__dirname, 'public')));
