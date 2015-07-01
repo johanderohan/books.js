@@ -21,6 +21,24 @@ div.top-menu {
   font-size: 2em;
 }
 
+.alert {
+    position: fixed;
+    bottom: 0;
+    border-top: 1px solid #eee;
+    z-index: 99;
+    background-color: rgba(251,251,251,.9);
+    border-radius: 0;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+    width: 100%;
+    color: #999;
+    text-align: center;
+    margin: 0;
+    padding: 5px;
+    font-size: 10px;
+}
+
 div.empty {
   margin: 0 auto;
   text-align: center;

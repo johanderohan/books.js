@@ -14,6 +14,7 @@
     <!-- js -->
     <script src="javascripts/angular.min.js"></script>
     <script src="javascripts/angular-route.min.js"></script>
+    <script src="javascripts/socket.io-1.3.5.js"></script>
 	  <script src="javascripts/app.js"></script>
   </head>
   <body ng-controller="mainController">
@@ -21,6 +22,7 @@
         <div class="col-xs-10"></div>
         <div class="col-xs-2"><a class="ion-ios-loop-strong {{active}}" href ng-click="scan()"></a></div>
       </div>
+      <div ng-if="alert" class="alert">{{alert}}</div>
       <!-- angular templating -->
   		<!-- this is where content will be injected -->
       <div ng-view></div>

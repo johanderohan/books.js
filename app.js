@@ -2,6 +2,7 @@ var fs = require('fs'),
   	path = require('path'),
   	EPub = require('epub'),
     _ = require('lodash'),
+    http = require('http'),
 	  express = require('express'),
     crypto = require('crypto'),
     lwip = require('lwip'),
@@ -13,14 +14,13 @@ var fs = require('fs'),
 
 var _ROOT = '/Users/johan/Documents/Leidos';
 
-var app = express();
+var app = module.exports.app = express();
 	app.set('views', path.join(__dirname+'/views'));
 	app.set('view engine', 'ejs');
 	app.use(bodyParser.json());
 	app.use(bodyParser.urlencoded({  extended: true }));
   app.use(express.static(path.join(__dirname, 'public')));
   app.use('/covers', express.static(__dirname + '/covers'));
-
 
   //ROUTES
 	app.get('/', function (req, res) {
@@ -42,6 +42,7 @@ var app = express();
   //API
   app.post('/scan', function(req, res){
     scan(function(){
+      io.emit('stops');
       db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
         res.send(docs);
       });
@@ -54,20 +55,16 @@ var app = express();
     });
 	});
 
-var server = app.listen(3000, function () {
-  var port = server.address().port;
-  console.log('Books listening at port %s', server.address().port);
-  firstRun();
-});
+var server = http.createServer(app);
+var io = require('socket.io').listen(server);
+server.listen(3000);
+console.log('Books listening at port %s', server.address().port);
 
-
-var firstRun = function () {
-  try{ fs.mkdirSync(__dirname+'/covers'); } catch(e) {/*console.log('/covers alrdey exists');*/}
-  try{ fs.mkdirSync(__dirname+'/covers/original'); } catch(e) {/*console.log('/covers alrdey exists');*/}
-	try{ fs.mkdirSync(__dirname+'/covers/small'); } catch(e) {/*console.log('/covers alrdey exists');*/}
-	try{ fs.mkdirSync(__dirname+'/data'); } catch(e) {/*console.log('/data alredy exists');*/}
-	//scan();
-};
+//Creating directories
+try{ fs.mkdirSync(__dirname+'/covers'); } catch(e) {/*console.log('/covers alrdey exists');*/}
+try{ fs.mkdirSync(__dirname+'/covers/original'); } catch(e) {/*console.log('/covers alrdey exists');*/}
+try{ fs.mkdirSync(__dirname+'/covers/small'); } catch(e) {/*console.log('/covers alrdey exists');*/}
+try{ fs.mkdirSync(__dirname+'/data'); } catch(e) {/*console.log('/data alredy exists');*/}
 
 var searchEPUB = function(dir) {
     var results = [];
@@ -101,6 +98,8 @@ var loadBooks = function(books,next){
           added: new Date(),
           md5: hash.digest('hex')
     		};
+        
+        io.emit('scan', 'Scanning '+book.metadata.title);
         
         async.series([
             function(callback){
