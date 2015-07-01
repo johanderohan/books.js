@@ -100,74 +100,72 @@ var loadBooks = function(books,next){
     		};
         
         io.emit('scan', 'Scanning '+book.metadata.title);
-        
-        async.series([
-            function(callback){
-              var wordCount = 0;
-              var charCount = 0;
-              var i = 0;
-              epub.flow.forEach(function(chapter){
-                  epub.getChapter(chapter.id, function(error, text){
-                    i++;
-                    var chapter = '';
-                    if(text) {
-                      chapter = striptags(text);
-                    }
-                    
-                    chapter_string = chapter.replace(/ /g,'');
-                    chapter_string = chapter_string.replace(/\n/g,'');
-                    charCount += chapter_string.length;
-                    
-                    chapter = chapter.replace(/[.,?¿¡!;()"'-]/g, ' ')
-                    .replace(/\s+/g, ' ')
-                    .toLowerCase()
-                    .split(' ');
-                    
-                    wordCount += chapter.length;
-                    if(epub.flow.length === i) {
-                      callback(null, {chars:charCount,words:wordCount});
-                    }
-                  });
-              });
-            }
-        ],
-        function(err, results){
-            book.charCount = results[0].chars;
-            book.wordCount = results[0].words;
+        db.find({ md5: book.md5 }, function (err, doc) {
+          if(!doc.length) {
+          async.series([
+              function(callback){
+                var wordCount = 0;
+                var charCount = 0;
+                var i = 0;
+                epub.flow.forEach(function(chapter){
+                    epub.getChapter(chapter.id, function(error, text){
+                      i++;
+                      var chapter = '';
+                      if(text) {
+                        chapter = striptags(text);
+                      }
+                      
+                      chapter_string = chapter.replace(/ /g,'');
+                      chapter_string = chapter_string.replace(/\n/g,'');
+                      charCount += chapter_string.length;
+                      
+                      chapter = chapter.replace(/[.,?¿¡!;()"'-]/g, ' ')
+                      .replace(/\s+/g, ' ')
+                      .toLowerCase()
+                      .split(' ');
+                      
+                      wordCount += chapter.length;
+                      if(epub.flow.length === i) {
+                        callback(null, {chars:charCount,words:wordCount});
+                      }
+                    });
+                });
+              }
+          ],
+          function(err, results){
+              book.charCount = results[0].chars;
+              book.wordCount = results[0].words;
 
-            db.find({ md5: book.md5 }, function (err, doc) {
-            if(!doc.length) {
-              db.insert(book, function (err, newDoc) {
-          			if(epub.metadata.cover){
-          				epub.getImage(epub.metadata.cover, function(err, data, mimeType){
-          			        if(mimeType == 'image/jpeg') {
-          			        	fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), data, function(err) { 
-                            lwip.open(__dirname+'/covers/original/'+newDoc._id+'.jpg', function(err, image){
-                              image.scale(0.5, function(err, image){
-                                image.toBuffer('jpg', function(err, buffer){
-                                    fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
-                                      //next
-                                      books.pop();
-                                      loadBooks(books,next);
-                                    });
+                db.insert(book, function (err, newDoc) {
+            			if(epub.metadata.cover){
+            				epub.getImage(epub.metadata.cover, function(err, data, mimeType){
+            			        if(mimeType == 'image/jpeg') {
+            			        	fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), data, function(err) { 
+                              lwip.open(__dirname+'/covers/original/'+newDoc._id+'.jpg', function(err, image){
+                                image.scale(0.5, function(err, image){
+                                  image.toBuffer('jpg', function(err, buffer){
+                                      fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                        //next
+                                        books.pop();
+                                        loadBooks(books,next);
+                                      });
+                                  });
                                 });
                               });
                             });
-                          });
-                        }
-          			    });
-          			}
-                
-          		});
-            } else {
+                          }
+            			    });
+            			}
+                  
+            		});
+            });
+        } else {
                 //next
                 books.pop();
                 loadBooks(books,next);
             } 
-          });
-        });
-        
       });
+    });
 	});
 	epub.parse();
 };
