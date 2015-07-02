@@ -1,7 +1,7 @@
 var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
 
 .factory('socket', ['$rootScope', function ($rootScope) {
-    var socket = io.connect('http://127.0.0.1:3000');
+    var socket = io.connect('http://'+window.server+':3000');
 
     return {
         on: function (eventName, callback) {
@@ -91,7 +91,7 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
 
 })
 
-.controller('homeController', function($scope,$rootScope,$http) {
+.controller('homeController', function($scope,$rootScope,$http,socket) {
   var loading = false;
   var page = 0;
   $scope.find = function(){
@@ -120,6 +120,10 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
         });
       }
   };
+  
+  socket.on('stops', function(){
+        page = 1;
+    });
 })
 
 .controller('singleController', function($scope,$rootScope,$http,$routeParams) {

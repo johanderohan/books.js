@@ -24,7 +24,9 @@ var app = module.exports.app = express();
 
   //ROUTES
 	app.get('/', function (req, res) {
-    res.render('index', { title: 'Books' });
+    require('dns').lookup(require('os').hostname(), function (err, add, fam) {
+      res.render('index', { title: 'Books', server: add });
+    });
 	});
   
   app.get('/books/:id', function (req, res) {
@@ -43,7 +45,7 @@ var app = module.exports.app = express();
   app.post('/scan', function(req, res){
     scan(function(){
       io.emit('stops');
-      db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+      db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).skip(0).limit(12).exec(function (err, docs) {
         res.send(docs);
       });
     });
