@@ -49,9 +49,16 @@ var myApp = angular.module('booksApp',['ngRoute'])
     
 })
 
-.controller('mainController', function($scope,$rootScope,$http,socket) {
+.controller('mainController', function($scope,$rootScope,$http,socket, $location) {
   $scope.active = '';
   $rootScope.isBooks = false;
+  $rootScope.isHome = true;
+  
+  $rootScope.$on('$routeChangeSuccess', function () {
+    if($location.path() === '/') { $rootScope.isHome = true; }
+    else { $rootScope.isHome = false; }    
+  });
+  
   $scope.scan = function(){
     $scope.active = 'active';
     $http.post('/scan').success(function(data){

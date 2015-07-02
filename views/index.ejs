@@ -19,8 +19,9 @@
   </head>
   <body ng-controller="mainController">
       <div class="row top-menu">
-        <div class="col-xs-10"></div>
-        <div class="col-xs-2"><a class="ion-ios-loop-strong {{active}}" href ng-click="scan()"></a></div>
+        <div class="col-xs-2 right"><a ng-show="!isHome" style="padding-right: 10px;" class="ion-ios-arrow-left" href="#/" ></a><a class="ion-navicon" href ></a></div>
+        <div class="col-xs-8"></div>
+        <div class="col-xs-2"><a style="padding-right: 10px;" class="ion-ios-search" href ></a><a class="ion-ios-loop {{active}}" href ng-click="scan()"></a></div>
       </div>
       <div ng-if="alert" class="alert">{{alert}}</div>
       <!-- angular templating -->

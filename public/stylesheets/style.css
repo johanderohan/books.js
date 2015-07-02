@@ -21,22 +21,26 @@ div.top-menu {
   font-size: 2em;
 }
 
+.right {
+  text-align: right;
+}
+
 .alert {
     position: fixed;
     bottom: 0;
-    border-top: 1px solid #eee;
+    border-top: 1px solid #333;
     z-index: 99;
-    background-color: rgba(251,251,251,.9);
+    background-color: rgba(51,51,51,.9);
     border-radius: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 100%;
-    color: #999;
+    color: #EEE;
     text-align: center;
     margin: 0;
     padding: 5px;
-    font-size: 10px;
+    font-size: 11px;
 }
 
 div.empty {
@@ -187,7 +191,7 @@ div.book-single span.publisher span+span{
   text-align: right;
 }
 
-.ion-ios-loop-strong.active{
+.ion-ios-loop.active{
   -moz-animation: spinner-loader 1500ms infinite linear;
   -webkit-animation: spinner-loader 1500ms infinite linear;
   animation: spinner-loader 1500ms infinite linear;
