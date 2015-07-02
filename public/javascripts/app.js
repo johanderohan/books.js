@@ -93,15 +93,16 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
 
 .controller('homeController', function($scope,$rootScope,$http) {
   var loading = false;
-  var page = 1;
+  var page = 0;
   $scope.find = function(){
-    page = 1;
+    page = 0;
     loading = true;
     if(!$rootScope.isSearch) {
-      $http.get('/api/books').success(function(data){
+      $http.get('/api/books/page/'+page).success(function(data){
         $rootScope.books = data;
         if(!data.length) $rootScope.isBooks = true;
         else $rootScope.isBooks = false;
+        page++;
         loading = false;
       });
     }
