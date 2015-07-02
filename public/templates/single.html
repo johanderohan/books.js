@@ -8,7 +8,8 @@
         <h1 class="col-xs-12 col-sm-12"><span class="title">{{book.metadata.title}}</span></h1>
         <span class="col-xs-12 col-sm-12 publisher">{{book.metadata.creator}}</span>
         <div class="col-xs-12 col-sm-12 description">{{book.metadata.description}}</div>
-        <div class="col-xs-12 col-sm-12 subject">{{book.metadata.subject}} <span class="year">{{book.metadata.date}}</span></div>
+        <div class="col-xs-12 col-sm-12 subject"><span ng-if="book.metadata.calibreseries">Serie {{book.metadata.calibreseries}} {{book.metadata.calibreseries_index}}</span><span class="year">{{book.wordCount}}K words</span></div>
+        <div class="col-xs-12 col-sm-12 info">{{book.metadata.subject}} <span class="year">{{book.metadata.date}}</span></div>
       </div>
   </div>
 </div>
