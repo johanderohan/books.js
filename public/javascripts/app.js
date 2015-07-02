@@ -1,4 +1,4 @@
-var myApp = angular.module('booksApp',['ngRoute'])
+var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
 
 .factory('socket', ['$rootScope', function ($rootScope) {
     var socket = io.connect('http://127.0.0.1:3000');
@@ -53,6 +53,7 @@ var myApp = angular.module('booksApp',['ngRoute'])
   $scope.active = '';
   $rootScope.isBooks = false;
   $rootScope.isHome = true;
+  $rootScope.isSearch = false;
   
   $rootScope.$on('$routeChangeSuccess', function () {
     if($location.path() === '/') { $rootScope.isHome = true; }
@@ -68,6 +69,17 @@ var myApp = angular.module('booksApp',['ngRoute'])
         else $rootScope.isBooks = false;
     });
   };
+  
+  $scope.showSearch = function(){
+    $rootScope.isSearch = !$rootScope.isSearch;
+  };
+  
+  $scope.search = function(){
+    $http.post('/search',{ search: $scope.searchValue }).success(function(data){
+        $rootScope.books = data;
+        $location.path('/');
+    });
+  };
 
   socket.on('scan', function(data){
         $scope.alert = data;
@@ -80,12 +92,32 @@ var myApp = angular.module('booksApp',['ngRoute'])
 })
 
 .controller('homeController', function($scope,$rootScope,$http) {
+  var loading = false;
+  var page = 1;
   $scope.find = function(){
-    $http.get('/api/books').success(function(data){
-      $rootScope.books = data;
-      if(!data.length) $rootScope.isBooks = true;
-      else $rootScope.isBooks = false;
-    });
+    page = 1;
+    loading = true;
+    if(!$rootScope.isSearch) {
+      $http.get('/api/books').success(function(data){
+        $rootScope.books = data;
+        if(!data.length) $rootScope.isBooks = true;
+        else $rootScope.isBooks = false;
+        loading = false;
+      });
+    }
+  };
+  
+  $scope.loadMore = function(){ 
+    if(!loading) {
+      loading = true;
+      $http.get('/api/books/page/'+page).success(function(data){
+          for (var i = 0; i < data.length; i++) {
+            $rootScope.books.push(data[i]);
+          }
+          page++;
+          loading = false;
+        });
+      }
   };
 })
 

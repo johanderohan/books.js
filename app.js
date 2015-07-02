@@ -49,8 +49,21 @@ var app = module.exports.app = express();
     });
   });
   
-  app.get('/api/books', function (req, res) {
-    db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+  app.post('/search', function(req, res){
+      var search = new RegExp(req.body.search,'g');
+      db.find({$or: [{ 'metadata.creator': search }, { 'metadata.title': search }]}).sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+        res.send(docs);
+      });
+  });
+  
+  app.get('/api/books/', function (req, res) {
+    db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).skip(0).limit(12).exec(function (err, docs) {
+      res.send(docs);
+    });
+	});
+  
+  app.get('/api/books/page/:page', function (req, res) {
+    db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).skip(12*req.params.page).limit(12).exec(function (err, docs) {
       res.send(docs);
     });
 	});

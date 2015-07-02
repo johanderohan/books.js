@@ -12,16 +12,21 @@
     <link href="stylesheets/ionicons.min.css" rel="stylesheet" media="screen">
     <link href="stylesheets/style.css" rel="stylesheet" media="screen">
     <!-- js -->
+    <script src="javascripts/jquery-1.11.1.min.js"></script>
     <script src="javascripts/angular.min.js"></script>
     <script src="javascripts/angular-route.min.js"></script>
+    <script src="javascripts/ng-infinite-scroll.min.js"></script>
     <script src="javascripts/socket.io-1.3.5.js"></script>
 	  <script src="javascripts/app.js"></script>
   </head>
   <body ng-controller="mainController">
       <div class="row top-menu">
-        <div class="col-xs-2 right"><a ng-show="!isHome" style="padding-right: 10px;" class="ion-ios-arrow-left" href="#/" ></a><a class="ion-navicon" href ></a></div>
-        <div class="col-xs-8"></div>
-        <div class="col-xs-2"><a style="padding-right: 10px;" class="ion-ios-search" href ></a><a class="ion-ios-loop {{active}}" href ng-click="scan()"></a></div>
+        <div class="col-xs-1 right"><a ng-show="!isHome" style="padding-right: 10px;" class="ion-ios-arrow-left" href="#/" ></a></div>
+        <div class="col-xs-1"><a class="ion-navicon" href ></a></div>
+        <div class="col-xs-4"></div>
+        <div class="col-xs-4"><input type="search" name="search" placeholder="Buscar" ng-model="searchValue" ng-show="isSearch" ng-keyup="$event.keyCode == 13 && search()" /></div>
+        <div class="col-xs-1"><a style="padding-right: 10px;" class="ion-ios-search" href ng-click="showSearch()" ></a></div>
+        <div class="col-xs-1"><a class="ion-ios-loop {{active}}" href ng-click="scan()"></a></div>
       </div>
       <div ng-if="alert" class="alert">{{alert}}</div>
       <!-- angular templating -->

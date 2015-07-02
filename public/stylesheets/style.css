@@ -19,6 +19,38 @@ div.top-menu {
   z-index: 2;
   opacity: 0.9;
   font-size: 2em;
+  padding-left: 10px;
+}
+
+div.top-menu input {
+  width: 100%;
+  background-color: rgba(251,251,251,.9);
+  color: #111;
+  border: 0;
+  font-size: 12px;
+  border-bottom: 1px solid #ccc;
+  height: 30px;
+  top: -5px;
+  position: relative;
+}
+
+::-webkit-input-placeholder { /* WebKit browsers */
+    color:    #aaa;
+    font-weight: lighter;
+}
+:-moz-placeholder { /* Mozilla Firefox 4 to 18 */
+   color:    #aaa;
+   font-weight: lighter;
+   opacity:  1;
+}
+::-moz-placeholder { /* Mozilla Firefox 19+ */
+   color:    #aaa;
+   font-weight: lighter;
+   opacity:  1;
+}
+:-ms-input-placeholder { /* Internet Explorer 10+ */
+   color:    #aaa;
+   font-weight: lighter;
 }
 
 .right {
@@ -28,19 +60,19 @@ div.top-menu {
 .alert {
     position: fixed;
     bottom: 0;
-    border-top: 1px solid #333;
     z-index: 99;
-    background-color: rgba(51,51,51,.9);
+    background-color: #000;
     border-radius: 0;
     overflow: hidden;
     white-space: nowrap;
     text-overflow: ellipsis;
     width: 100%;
-    color: #EEE;
+    color: #FFF;
     text-align: center;
     margin: 0;
     padding: 5px;
     font-size: 11px;
+    opacity: .7;
 }
 
 div.empty {
@@ -248,4 +280,11 @@ div.book-single span.publisher span+span{
   div.book-single h1 {margin-top: 30px;font-size: 2em;}
   div.book-single .col-xs-12 {width: 98%!important;}
 
+}
+
+/*remove bootstrap glow */
+textarea:hover, input:hover, textarea:active, input:active, textarea:focus, input:focus, button:focus, button:active, button:hover, span:hover, span:focus, span:active
+{
+    outline:0px !important;
+    -webkit-appearance:none!important;
 }
