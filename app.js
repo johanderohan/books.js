@@ -144,6 +144,8 @@ var loadBooks = function(books,next){
           function(err, results){
               book.charCount = results[0].chars;
               book.wordCount = results[0].words;
+              if(book.metadata.description)
+                book.metadata.description = striptags(book.metadata.description);
 
                 db.insert(book, function (err, newDoc) {
             			if(epub.metadata.cover){
