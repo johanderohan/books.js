@@ -51,6 +51,7 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
 
 .controller('mainController', function($scope,$rootScope,$http,socket, $location) {
   $scope.active = '';
+  $scope.side = '';
   $rootScope.isBooks = false;
   $rootScope.isHome = true;
   $rootScope.isSearch = false;
@@ -72,6 +73,11 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
   
   $scope.showSearch = function(){
     $rootScope.isSearch = !$rootScope.isSearch;
+  };
+  
+  $scope.showSide = function(){
+    if($scope.side === '') $scope.side = 'open';
+    else $scope.side = '';
   };
   
   $scope.search = function(){

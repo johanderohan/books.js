@@ -9,6 +9,42 @@ a {
   text-decoration: none!important;
 }
 
+div.sidebar-menu {
+    margin: 0;
+    width: 300px;
+    position: fixed;
+    border-right: 1px solid #eee;
+    display: block;
+    height: 100%;
+    top: 50px;
+    z-index: 98;
+    background-color: #fbfbfb;
+    opacity: 0.9;
+    
+    visibility: visible;
+	  -webkit-transform: translate3d(-100%, 0, 0);
+	  transform: translate3d(-100%, 0, 0);
+    transition: all 0.3s ease;
+}
+
+div.sidebar-menu.open{
+  visibility: visible;
+	-webkit-transform: translate3d(0, 0, 0);
+	transform: translate3d(0, 0, 0);
+  transition: all 0.3s ease;
+}
+
+div.sidebar-menu .col-xs-12.header {
+  border-bottom: 1px solid #eee;
+}
+div.sidebar-menu .row {
+  margin: 0;
+}
+
+div.sidebar-menu .col-xs-12 {
+  padding: 15px;
+}
+
 div.top-menu {
   height: 50px;
   width: 100%;

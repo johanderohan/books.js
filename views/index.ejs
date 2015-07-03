@@ -25,11 +25,16 @@
   <body ng-controller="mainController">
       <div class="row top-menu">
         <div class="col-xs-1 right"><a ng-show="!isHome" style="padding-right: 10px;" class="ion-ios-arrow-left" href="#/" ></a></div>
-        <div class="col-xs-1"><a class="ion-navicon" href ></a></div>
+        <div class="col-xs-1"><a class="ion-navicon" href ng-click="showSide()"></a></div>
         <div class="col-xs-4"></div>
         <div class="col-xs-4"><input type="search" name="search" placeholder="Buscar" ng-model="searchValue" ng-show="isSearch" ng-keyup="$event.keyCode == 13 && search()" /></div>
         <div class="col-xs-1"><a style="padding-right: 10px;" class="ion-ios-search" href ng-click="showSearch()" ></a></div>
         <div class="col-xs-1"><a class="ion-ios-loop {{active}}" href ng-click="scan()"></a></div>
+      </div>
+      <div class="sidebar-menu {{side}}">
+       <div class="row">
+         <div class="col-xs-12 header">Sort</div>
+       </div>
       </div>
       <div ng-if="alert" class="alert">{{alert}}</div>
       <!-- angular templating -->
