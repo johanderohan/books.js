@@ -33,7 +33,30 @@
       </div>
       <div class="sidebar-menu {{side}}">
        <div class="row">
-         <div class="col-xs-12 header">Sort</div>
+         <div class="col-xs-12 header">
+           <div class="col-xs-1 icon">
+               <span class="ion-ios-arrow-down"></span>
+            </div>
+            <div class="col-xs-10 name">
+              Ordenado por
+            </div>
+         </div>
+         <div class="col-xs-12" ng-click="reOrder('autor')">
+          <div class="col-xs-1 icon">
+             <span ng-class="order === 'autor' ? 'ion-ios-checkmark-outline' : 'ion-ios-circle-outline'"></span>
+          </div>
+          <div class="col-xs-10 name">
+            Autor
+          </div>
+         </div> 
+         <div class="col-xs-12" ng-click="reOrder('title')">
+           <div class="col-xs-1 icon">
+               <span ng-class="order == 'title' ? 'ion-ios-checkmark-outline' : 'ion-ios-circle-outline'"></span>
+            </div>
+            <div class="col-xs-10 name">
+              Título
+            </div>
+         </div>
        </div>
       </div>
       <div ng-if="alert" class="alert">{{alert}}</div>

@@ -52,9 +52,11 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
 .controller('mainController', function($scope,$rootScope,$http,socket, $location) {
   $scope.active = '';
   $scope.side = '';
+  $scope.order = 'autor';
   $rootScope.isBooks = false;
   $rootScope.isHome = true;
   $rootScope.isSearch = false;
+  $rootScope.orderID = 0;
   
   $rootScope.$on('$routeChangeSuccess', function () {
     if($location.path() === '/') { $rootScope.isHome = true; }
@@ -78,6 +80,18 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
   $scope.showSide = function(){
     if($scope.side === '') $scope.side = 'open';
     else $scope.side = '';
+  };
+  
+  $scope.reOrder = function(id){
+    if(id !== $scope.order) {
+      if(id === 'autor') $rootScope.orderID = 0;
+      if(id === 'title') $rootScope.orderID = 1;
+      $scope.order = id;
+      $http.get('/api/books/page/0/'+$rootScope.orderID).success(function(data){
+        $rootScope.books = data;
+        $rootScope.$broadcast('repage');
+      });
+    }
   };
   
   $scope.search = function(){
@@ -104,7 +118,7 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
     page = 0;
     loading = true;
     if(!$rootScope.isSearch) {
-      $http.get('/api/books/page/'+page).success(function(data){
+      $http.get('/api/books/page/'+page+'/'+$rootScope.orderID).success(function(data){
         $rootScope.books = data;
         if(!data.length) $rootScope.isBooks = true;
         else $rootScope.isBooks = false;
@@ -117,7 +131,7 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
   $scope.loadMore = function(){ 
     if(!loading) {
       loading = true;
-      $http.get('/api/books/page/'+page).success(function(data){
+      $http.get('/api/books/page/'+page+'/'+$rootScope.orderID).success(function(data){
           for (var i = 0; i < data.length; i++) {
             $rootScope.books.push(data[i]);
           }
@@ -130,6 +144,10 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
   socket.on('stops', function(){
         page = 1;
     });
+  
+  $scope.$on('repage', function(event, args) {
+      page = 1;
+  });
 })
 
 .controller('singleController', function($scope,$rootScope,$http,$routeParams) {

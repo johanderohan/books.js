@@ -9,6 +9,14 @@ a {
   text-decoration: none!important;
 }
 
+div.sidebar-menu .icon {
+  font-size: 2em;
+}
+
+div.sidebar-menu .name {
+  padding-top: 10px;
+}
+
 div.sidebar-menu {
     margin: 0;
     width: 300px;
@@ -20,6 +28,7 @@ div.sidebar-menu {
     z-index: 98;
     background-color: #fbfbfb;
     opacity: 0.9;
+    text-transform: uppercase;
     
     visibility: visible;
 	  -webkit-transform: translate3d(-100%, 0, 0);
@@ -36,13 +45,19 @@ div.sidebar-menu.open{
 
 div.sidebar-menu .col-xs-12.header {
   border-bottom: 1px solid #eee;
+  padding: 15px;
+  padding-bottom: 5px;
+  padding-top: 5px;
+  cursor: default;
 }
 div.sidebar-menu .row {
   margin: 0;
 }
 
 div.sidebar-menu .col-xs-12 {
-  padding: 15px;
+  padding-left: 15px;
+  padding-right: 15px;
+  cursor: pointer;
 }
 
 div.top-menu {
@@ -181,8 +196,8 @@ div.book-single h1 span{
 	vertical-align: middle;
 }
 div.book-single h1 {margin: 0;font-size: 2.3em;;}
-div.book-single div.subject {opacity: 0.7; margin-top:30px;}
-div.book-single div.info {opacity: 0.7; margin-top:5px;}
+div.book-single div.subject {opacity: 0.7; margin-top:30px;text-transform: uppercase;font-size: .9em;}
+div.book-single div.info {opacity: 0.7; margin-top:5px;text-transform: uppercase;font-size: .9em;}
 div.book-single div.description {margin-top:40px; text-align: justify;}
 div.book-single span.year{
 	float: right;
