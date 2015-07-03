@@ -83,7 +83,6 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
   };
   
   $scope.reOrder = function(id){
-    if(id !== $scope.order) {
       if(id === 'autor') $rootScope.orderID = 0;
       if(id === 'title') $rootScope.orderID = 1;
       $scope.order = id;
@@ -91,7 +90,6 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
         $rootScope.books = data;
         $rootScope.$broadcast('repage');
       });
-    }
   };
   
   $scope.search = function(){

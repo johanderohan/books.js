@@ -19,7 +19,7 @@ div.sidebar-menu .name {
 
 div.sidebar-menu {
     margin: 0;
-    width: 300px;
+    width: 250px;
     position: fixed;
     border-right: 1px solid #eee;
     display: block;

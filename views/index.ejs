@@ -28,7 +28,7 @@
         <div class="col-xs-1"><a class="ion-navicon" href ng-click="showSide()"></a></div>
         <div class="col-xs-4"></div>
         <div class="col-xs-4"><input type="search" name="search" placeholder="Buscar" ng-model="searchValue" ng-show="isSearch" ng-keyup="$event.keyCode == 13 && search()" /></div>
-        <div class="col-xs-1"><a style="padding-right: 10px;" class="ion-ios-search" href ng-click="showSearch()" ></a></div>
+        <div class="col-xs-1" style="text-align: right;"><a style="padding-right: 10px;" class="ion-ios-search" href ng-click="showSearch()" ></a></div>
         <div class="col-xs-1"><a class="ion-ios-loop {{active}}" href ng-click="scan()"></a></div>
       </div>
       <div class="sidebar-menu {{side}}">
