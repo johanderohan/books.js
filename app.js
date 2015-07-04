@@ -10,9 +10,10 @@ var fs = require('fs'),
     async = require('async'),
 	  bodyParser = require('body-parser'),
   	Datastore = require('nedb'),
-    db = new Datastore({ filename: path.join(__dirname+'/data/data.db'), autoload: true });
+    db = new Datastore({ filename: path.join(__dirname+'/data/data.db'), autoload: true }),
+    config = require('./config.js');
 
-var _ROOT = '/Users/johan/Documents/Libros';
+var _ROOT = config.library;
 
 var app = module.exports.app = express();
 	app.set('views', path.join(__dirname+'/views'));
