@@ -151,8 +151,10 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
 .controller('singleController', function($scope,$rootScope,$http,$routeParams) {
   $scope.find = function(){
     $http.get('/books/'+$routeParams.id).success(function(data){
-      var year = data.metadata.date.split('-');
-      data.metadata.date = year[0];
+      if(data.metadata.date){
+        var year = data.metadata.date.split('-');
+        data.metadata.date = year[0];
+      }
       data.metadata.calibreseries_index = parseInt(data.metadata.calibreseries_index);
       data.wordCount = parseInt(data.wordCount/1000);
       $scope.book = data;

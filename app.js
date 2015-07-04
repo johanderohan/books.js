@@ -12,7 +12,7 @@ var fs = require('fs'),
   	Datastore = require('nedb'),
     db = new Datastore({ filename: path.join(__dirname+'/data/data.db'), autoload: true });
 
-var _ROOT = '/Users/johan/Documents/Leidos';
+var _ROOT = '/Users/johan/Documents/Libros';
 
 var app = module.exports.app = express();
 	app.set('views', path.join(__dirname+'/views'));
@@ -120,7 +120,7 @@ var loadBooks = function(books,next){
           md5: hash.digest('hex')
     		};
         
-        io.emit('scan', 'Scanning '+book.metadata.title);
+        io.emit('scan', 'Leyendo '+book.metadata.title);
         db.find({ md5: book.md5 }, function (err, doc) {
           if(!doc.length) {
           async.series([
@@ -162,23 +162,59 @@ var loadBooks = function(books,next){
                 db.insert(book, function (err, newDoc) {
             			if(epub.metadata.cover){
             				epub.getImage(epub.metadata.cover, function(err, data, mimeType){
-            			        if(mimeType == 'image/jpeg') {
-            			        	fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), data, function(err) { 
-                              lwip.open(__dirname+'/covers/original/'+newDoc._id+'.jpg', function(err, image){
-                                image.scale(0.5, function(err, image){
-                                  image.toBuffer('jpg', function(err, buffer){
-                                      fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
-                                        //next
-                                        books.pop();
-                                        loadBooks(books,next);
+                          if(err){
+                            //Copy a default image
+                            lwip.open(__dirname+'/public/images/default.jpg', function(err, image){
+                              image.toBuffer('jpg', function(err, buffer){
+                                  fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                    image.scale(0.5, function(err, image){
+                                      image.toBuffer('jpg', function(err, buffer){
+                                          fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                            //next
+                                            books.pop();
+                                            loadBooks(books,next);
+                                          });
                                       });
+                                    });
+                                  });
+                              });
+                            });
+                          } else {
+              			        if(mimeType == 'image/jpeg') {
+              			        	fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), data, function(err) { 
+                                lwip.open(__dirname+'/covers/original/'+newDoc._id+'.jpg', function(err, image){
+                                  image.scale(0.5, function(err, image){
+                                    image.toBuffer('jpg', function(err, buffer){
+                                        fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                          //next
+                                          books.pop();
+                                          loadBooks(books,next);
+                                        });
+                                    });
                                   });
                                 });
                               });
-                            });
+                            }
                           }
             			    });
-            			}
+            			} else {
+                    //Copy a default image
+                    lwip.open(__dirname+'/public/images/default.jpg', function(err, image){
+                      image.toBuffer('jpg', function(err, buffer){
+                          fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                            image.scale(0.5, function(err, image){
+                              image.toBuffer('jpg', function(err, buffer){
+                                  fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                    //next
+                                    books.pop();
+                                    loadBooks(books,next);
+                                  });
+                              });
+                            });
+                          });
+                      });
+                    });
+                  }
                   
             		});
             });
