@@ -160,4 +160,29 @@ var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
       $scope.book = data;
     });
   };
+  
+  $scope.markRead = function(value) {
+    if(typeof value === 'undefined' || !value) {
+      $http.post('/api/readed/'+$routeParams.id).success(function(){
+        $scope.book.read = true;
+      });
+    } else {
+      $http.delete('/api/readed/'+$routeParams.id).success(function(){
+        $scope.book.read = false;
+      });
+    }
+  };
+  
+  $scope.markLike = function(value) {
+    if(typeof value === 'undefined' || !value) {
+      $http.post('/api/liked/'+$routeParams.id).success(function(){
+        $scope.book.like = true;
+      });
+    } else {
+      $http.delete('/api/liked/'+$routeParams.id).success(function(){
+        $scope.book.like = false;
+      });
+    }
+  };
+  
 });

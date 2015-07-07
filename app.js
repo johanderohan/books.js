@@ -76,6 +76,34 @@ var app = module.exports.app = express();
       });
     }
 	});
+  
+  app.post('/api/readed/:id', function (req, res) {
+    db.update({ _id: req.params.id }, { $set: { read: true } }, function (err) {   
+      if (err) res.sendStatus(400);
+      else res.sendStatus(200);
+    });
+	});
+  
+  app.delete('/api/readed/:id', function (req, res) {
+    db.update({ _id: req.params.id }, { $set: { read: false } }, function (err) {   
+      if (err) res.sendStatus(400);
+      else res.sendStatus(200);
+    });
+	});
+  
+  app.post('/api/liked/:id', function (req, res) {
+    db.update({ _id: req.params.id }, { $set: { like: true } }, function (err) {   
+      if (err) res.sendStatus(400);
+      else res.sendStatus(200);
+    });
+  });
+
+  app.delete('/api/liked/:id', function (req, res) {
+    db.update({ _id: req.params.id }, { $set: { like: false } }, function (err) {   
+      if (err) res.sendStatus(400);
+      else res.sendStatus(200);
+    });
+  });
 
 var server = http.createServer(app);
 var io = require('socket.io').listen(server);

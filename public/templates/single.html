@@ -2,8 +2,8 @@
   <div class="book-single row">
       <div class="col-xs-12 col-sm-1 actions">
         <a href ng-class="{'ion-ios-pricetag': hover, 'ion-ios-pricetag-outline': !hover}" ng-mouseenter="hover=true" ng-mouseleave="hover=false"></a>
-        <a href ng-class="read ? 'ion-ios-circle-filled' : (hover2 ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline')" ng-mouseenter="hover2=true" ng-mouseleave="hover2=false"></a>
-        <a href ng-class="like ? 'ion-ios-heart' : (hover3 ? 'ion-ios-heart' : 'ion-ios-heart-outline')" ng-mouseenter="hover3=true" ng-mouseleave="hover3=false"></a>
+        <a href ng-click="markRead(book.read)" ng-class="book.read ? 'ion-ios-circle-filled' : (hover2 ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline')" ng-mouseenter="hover2=true" ng-mouseleave="hover2=false"></a>
+        <a href ng-click="markLike(book.like)" ng-class="book.like ? 'ion-ios-heart' : (hover3 ? 'ion-ios-heart' : 'ion-ios-heart-outline')" ng-mouseenter="hover3=true" ng-mouseleave="hover3=false"></a>
         <a href="/download/{{book._id}}" ng-class="{'ion-ios-cloud-download': hover4, 'ion-ios-cloud-download-outline': !hover4}" ng-mouseenter="hover4=true" ng-mouseleave="hover4=false"></a>
       </div>
       <a href class="col-xs-12 col-sm-4">
