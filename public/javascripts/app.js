@@ -1,4 +1,4 @@
-var myApp = angular.module('booksApp',['ngRoute','infinite-scroll'])
+var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','infinite-scroll'])
 
 .factory('socket', ['$rootScope', function ($rootScope) {
     var socket = io.connect('http://'+window.server+':3000');
