@@ -3,6 +3,7 @@ var fs = require('fs'),
   	EPub = require('epub'),
     _ = require('lodash'),
     http = require('http'),
+    compression = require('compression'),
 	  express = require('express'),
     crypto = require('crypto'),
     lwip = require('lwip'),
@@ -19,6 +20,7 @@ var app = module.exports.app = express();
 	app.set('views', path.join(__dirname+'/views'));
 	app.set('view engine', 'ejs');
 	app.use(bodyParser.json());
+  app.use(compression()); 
 	app.use(bodyParser.urlencoded({  extended: true }));
   app.use(express.static(path.join(__dirname, 'public')));
   app.use('/covers', express.static(__dirname + '/covers'));
