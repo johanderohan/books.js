@@ -77,15 +77,16 @@ var app = module.exports.app = express();
     }
 	});
   
+  //Reading will be another state {read:2}
   app.post('/api/readed/:id', function (req, res) {
-    db.update({ _id: req.params.id }, { $set: { read: true } }, function (err) {   
+    db.update({ _id: req.params.id }, { $set: { read: 1 } }, function (err) {   
       if (err) res.sendStatus(400);
       else res.sendStatus(200);
     });
 	});
   
   app.delete('/api/readed/:id', function (req, res) {
-    db.update({ _id: req.params.id }, { $set: { read: false } }, function (err) {   
+    db.update({ _id: req.params.id }, { $set: { read: 0 } }, function (err) {   
       if (err) res.sendStatus(400);
       else res.sendStatus(200);
     });
@@ -135,6 +136,9 @@ var loadBooks = function(books,next){
       var hash = crypto.createHash('md5'), 
       stream = fs.createReadStream(books[books.length-1]);
 
+      //Debug
+      console.log(books[books.length-1]);
+      
       stream.on('data', function (data) {
         hash.update(data, 'utf8');
       });
@@ -149,7 +153,7 @@ var loadBooks = function(books,next){
           md5: hash.digest('hex')
     		};
         
-        io.emit('scan', 'Leyendo '+book.metadata.title);
+        io.emit('scan', 'Reading '+book.metadata.title);
         db.find({ md5: book.md5 }, function (err, doc) {
           if(!doc.length) {
           async.series([
