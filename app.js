@@ -15,6 +15,7 @@ var fs = require('fs'),
     config = require('./config.js');
 
 var _ROOT = config.library;
+var scanning = false;
 
 var app = module.exports.app = express();
 	app.set('views', path.join(__dirname+'/views'));
@@ -46,12 +47,16 @@ var app = module.exports.app = express();
   
   //API
   app.post('/scan', function(req, res){
-    scan(function(){
-      io.emit('stops');
-      db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).skip(0).limit(12).exec(function (err, docs) {
-        res.send(docs);
+    if(!scanning) {
+      scanning = true;
+      scan(function(){
+        io.emit('stops');
+        db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).skip(0).limit(12).exec(function (err, docs) {
+          scanning = false;
+          res.send(docs);
+        });
       });
-    });
+    }
   });
   
   app.post('/search', function(req, res){
