@@ -66,19 +66,19 @@ var app = module.exports.app = express();
       });
   });
   
-  /*app.get('/api/books/page/:page', function (req, res) {
-    db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).skip(12*req.params.page).limit(12).exec(function (err, docs) {
-      res.send(docs);
-    });
-	});*/
+  app.get('/api/books', function (req, res) {
+      db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+        res.send(docs);
+      });
+	});
   
-  app.get('/api/books/page/:page/:order', function (req, res) {
-    if(parseInt(req.params.order) === 1) {
-      db.find().sort({ 'metadata.title': 1, 'metadata.date': 1 }).skip(12*req.params.page).limit(12).exec(function (err, docs) {
+  app.post('/api/books', function (req, res) {
+    if(req.body.order === 'title') {
+      db.find().sort({ 'metadata.title': 1, 'metadata.date': 1 }).exec(function (err, docs) {
         res.send(docs);
       });
     } else {
-      db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).skip(12*req.params.page).limit(12).exec(function (err, docs) {
+      db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
         res.send(docs);
       });
     }
@@ -137,7 +137,7 @@ var searchEPUB = function(dir) {
 };
 
 var loadBooks = function(books,next){
-	if(!books.length) { next(); return; }
+	if(!books.length) { io.emit('stops', ''); next(); return; }
 	var	epub = new EPub(books[books.length-1]);
 	epub.on("end", function(){
       var hash = crypto.createHash('md5'), 

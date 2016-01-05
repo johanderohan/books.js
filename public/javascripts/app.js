@@ -86,9 +86,8 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','infinite-scroll
       if(id === 'autor') $rootScope.orderID = 0;
       if(id === 'title') $rootScope.orderID = 1;
       $scope.order = id;
-      $http.get('/api/books/page/0/'+$rootScope.orderID).success(function(data){
+      $http.post('/api/books/', {order: $scope.order}).success(function(data){
         $rootScope.books = data;
-        $rootScope.$broadcast('repage');
       });
   };
   
@@ -105,47 +104,32 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','infinite-scroll
     
   socket.on('stops', function(){
         $scope.alert = '';
+        $location.path('/');
     });
+    
+  //watch books collection for lazyload
+  $scope.$watch('books', function() {
+      setTimeout(function() {
+          $('img.lazy').lazyload({
+              effect : 'fadeIn',
+              threshold : 200
+          });
+      });
+    }, true);
 
 })
 
 .controller('homeController', function($scope,$rootScope,$http,socket) {
-  var loading = false;
-  var page = 0;
   $scope.find = function(){
-    page = 0;
-    loading = true;
     if(!$rootScope.isSearch) {
-      $http.get('/api/books/page/'+page+'/'+$rootScope.orderID).success(function(data){
+      $http.get('/api/books').success(function(data){
         $rootScope.books = data;
         if(!data.length) $rootScope.isBooks = true;
         else $rootScope.isBooks = false;
-        page++;
-        loading = false;
       });
     }
   };
   
-  $scope.loadMore = function(){ 
-    if(!loading) {
-      loading = true;
-      $http.get('/api/books/page/'+page+'/'+$rootScope.orderID).success(function(data){
-          for (var i = 0; i < data.length; i++) {
-            $rootScope.books.push(data[i]);
-          }
-          page++;
-          loading = false;
-        });
-      }
-  };
-  
-  socket.on('stops', function(){
-        page = 1;
-    });
-  
-  $scope.$on('repage', function(event, args) {
-      page = 1;
-  });
 })
 
 .controller('singleController', function($scope,$rootScope,$http,$routeParams) {
