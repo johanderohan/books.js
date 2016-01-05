@@ -1,4 +1,4 @@
-var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','infinite-scroll'])
+var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'])
 
 .factory('socket', ['$rootScope', function ($rootScope) {
     var socket = io.connect('http://'+window.server+':3000');
@@ -109,13 +109,22 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','infinite-scroll
     
   //watch books collection for lazyload
   $scope.$watch('books', function() {
-      setTimeout(function() {
+      /*setTimeout(function() {
           $('img.lazy').lazyload({
               effect : 'fadeIn',
               threshold : 200
           });
-      });
+      });*/
     }, true);
+    
+  /*$rootScope.$on('$locationChangeSuccess', function () {
+      setTimeout(function() {
+        $('img.lazy').lazyload({
+            effect : 'fadeIn',
+            threshold : 200
+        });
+      },500);
+    });*/
 
 })
 
