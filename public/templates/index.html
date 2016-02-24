@@ -1,7 +1,7 @@
 <div class="container" ng-init="find()">
   <div class="row book">
     <div>
-    <div class="col-xs-6 col-sm-4 col-md-3" ng-repeat="book in books">
+    <div class="col-xs-6 col-sm-4 col-md-3" ng-repeat="book in books" ng-class="{'deleted': book.deleted}">
       <div class="cover">
         <a href="/#/book/{{book._id}}">
           <img src="images/default.jpg" lazy-img="/covers/small/{{book._id}}.jpg" />

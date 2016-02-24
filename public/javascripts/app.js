@@ -11,14 +11,14 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
                     callback.apply(socket, args);
                 });
             }
- 
+
             socket.on(eventName, wrapper);
- 
+
             return function () {
                 socket.removeListener(eventName, wrapper);
             };
         },
- 
+
         emit: function (eventName, data, callback) {
             socket.emit(eventName, data, function () {
                 var args = arguments;
@@ -34,54 +34,54 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
 
 // configure our routes
 .config(function($routeProvider) {
-  
+
   $routeProvider
     // route for the home page
     .when('/', {
       templateUrl : 'templates/index.html',
       controller  : 'homeController'
     })
-    
+
     .when('/book/:id', {
       templateUrl : 'templates/single.html',
       controller  : 'singleController'
     });
-    
+
 })
 
 .controller('mainController', function($scope,$rootScope,$http,socket, $location) {
-  $scope.active = '';
+  $scope.active = false;
   $scope.side = '';
   $scope.order = 'autor';
   $rootScope.isBooks = false;
   $rootScope.isHome = true;
   $rootScope.isSearch = false;
   $rootScope.orderID = 0;
-  
+
   $rootScope.$on('$routeChangeSuccess', function () {
     if($location.path() === '/') { $rootScope.isHome = true; }
-    else { $rootScope.isHome = false; }    
+    else { $rootScope.isHome = false; }
   });
-  
+
   $scope.scan = function(){
-    $scope.active = 'active';
+    $scope.active = true;
     $http.post('/scan').success(function(data){
         $rootScope.books = data;
-        $scope.active = '';
+        $scope.active = false;
         if(!data.length) $rootScope.isBooks = true;
         else $rootScope.isBooks = false;
     });
   };
-  
+
   $scope.showSearch = function(){
     $rootScope.isSearch = !$rootScope.isSearch;
   };
-  
+
   $scope.showSide = function(){
     if($scope.side === '') $scope.side = 'open';
     else $scope.side = '';
   };
-  
+
   $scope.reOrder = function(id){
       if(id === 'autor') $rootScope.orderID = 0;
       if(id === 'title') $rootScope.orderID = 1;
@@ -90,7 +90,7 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
         $rootScope.books = data;
       });
   };
-  
+
   $scope.search = function(){
     $http.post('/search',{ search: $scope.searchValue }).success(function(data){
         $rootScope.books = data;
@@ -101,12 +101,12 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
   socket.on('scan', function(data){
         $scope.alert = data;
     });
-    
+
   socket.on('stops', function(){
         $scope.alert = '';
         $location.path('/');
     });
-    
+
   //watch books collection for lazyload
   $scope.$watch('books', function() {
       /*setTimeout(function() {
@@ -116,7 +116,7 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
           });
       });*/
     }, true);
-    
+
   /*$rootScope.$on('$locationChangeSuccess', function () {
       setTimeout(function() {
         $('img.lazy').lazyload({
@@ -138,7 +138,7 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
       });
     }
   };
-  
+
 })
 
 .controller('singleController', function($scope,$rootScope,$http,$routeParams) {
@@ -153,7 +153,7 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
       $scope.book = data;
     });
   };
-  
+
   $scope.markRead = function(value) {
     if(typeof value === 'undefined' || !value) {
       $http.post('/api/readed/'+$routeParams.id).success(function(){
@@ -165,7 +165,7 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
       });
     }
   };
-  
+
   $scope.markLike = function(value) {
     if(typeof value === 'undefined' || !value) {
       $http.post('/api/liked/'+$routeParams.id).success(function(){
@@ -177,5 +177,5 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
       });
     }
   };
-  
+
 });

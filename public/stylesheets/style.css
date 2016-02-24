@@ -36,7 +36,7 @@ div.sidebar-menu {
     background-color: #fbfbfb;
     opacity: 0.9;
     text-transform: uppercase;
-    
+
     visibility: visible;
 	  -webkit-transform: translate3d(-100%, 0, 0);
 	  transform: translate3d(-100%, 0, 0);
@@ -151,6 +151,8 @@ div.empty p {
 div.top-menu div {
   margin-top: 5px;
 }
+
+.deleted {opacity: 0.4;}
 
 .container { margin-top: 40px; margin-bottom: 40px; }
 

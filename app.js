@@ -21,7 +21,7 @@ var app = module.exports.app = express();
 	app.set('views', path.join(__dirname+'/views'));
 	app.set('view engine', 'ejs');
 	app.use(bodyParser.json());
-  app.use(compression()); 
+  app.use(compression());
 	app.use(bodyParser.urlencoded({  extended: true }));
   app.use(express.static(path.join(__dirname, 'public')));
   app.use('/covers', express.static(__dirname + '/covers'));
@@ -32,19 +32,19 @@ var app = module.exports.app = express();
       res.render('index', { title: 'Books', server: add });
     });
 	});
-  
+
   app.get('/books/:id', function (req, res) {
-    db.findOne({ _id: req.params.id }, function (err, doc) {   
+    db.findOne({ _id: req.params.id }, function (err, doc) {
       res.send(doc);
     });
 	});
-  
+
   app.get('/download/:id', function (req, res) {
-    db.findOne({ _id: req.params.id }, function (err, doc) {   
+    db.findOne({ _id: req.params.id }, function (err, doc) {
       res.sendFile(doc.realpath);
     });
 	});
-  
+
   //API
   app.post('/scan', function(req, res){
     if(!scanning) {
@@ -58,20 +58,20 @@ var app = module.exports.app = express();
       });
     }
   });
-  
+
   app.post('/search', function(req, res){
       var search = new RegExp(req.body.search,'g');
       db.find({$or: [{ 'metadata.creator': search }, { 'metadata.title': search }]}).sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
         res.send(docs);
       });
   });
-  
+
   app.get('/api/books', function (req, res) {
       db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
         res.send(docs);
       });
 	});
-  
+
   app.post('/api/books', function (req, res) {
     if(req.body.order === 'title') {
       db.find().sort({ 'metadata.title': 1, 'metadata.date': 1 }).exec(function (err, docs) {
@@ -83,31 +83,31 @@ var app = module.exports.app = express();
       });
     }
 	});
-  
+
   //Reading will be another state {read:2}
   app.post('/api/readed/:id', function (req, res) {
-    db.update({ _id: req.params.id }, { $set: { read: 1 } }, function (err) {   
+    db.update({ _id: req.params.id }, { $set: { read: 1 } }, function (err) {
       if (err) res.sendStatus(400);
       else res.sendStatus(200);
     });
 	});
-  
+
   app.delete('/api/readed/:id', function (req, res) {
-    db.update({ _id: req.params.id }, { $set: { read: 0 } }, function (err) {   
+    db.update({ _id: req.params.id }, { $set: { read: 0 } }, function (err) {
       if (err) res.sendStatus(400);
       else res.sendStatus(200);
     });
 	});
-  
+
   app.post('/api/liked/:id', function (req, res) {
-    db.update({ _id: req.params.id }, { $set: { like: true } }, function (err) {   
+    db.update({ _id: req.params.id }, { $set: { like: true } }, function (err) {
       if (err) res.sendStatus(400);
       else res.sendStatus(200);
     });
   });
 
   app.delete('/api/liked/:id', function (req, res) {
-    db.update({ _id: req.params.id }, { $set: { like: false } }, function (err) {   
+    db.update({ _id: req.params.id }, { $set: { like: false } }, function (err) {
       if (err) res.sendStatus(400);
       else res.sendStatus(200);
     });
@@ -137,21 +137,21 @@ var searchEPUB = function(dir) {
 };
 
 var loadBooks = function(books,next){
-	if(!books.length) { io.emit('stops', ''); next(); return; }
+	if(!books.length) { io.emit('stops', ''); checkBooks(next); return; }
 	var	epub = new EPub(books[books.length-1]);
 	epub.on("end", function(){
-      var hash = crypto.createHash('md5'), 
+      var hash = crypto.createHash('md5'),
       stream = fs.createReadStream(books[books.length-1]);
 
       //Debug
       console.log(books[books.length-1]);
-      
+
       stream.on('data', function (data) {
         hash.update(data, 'utf8');
       });
 
       stream.on('end', function () {
-        
+
         var book = {
     			extension: path.extname(books[books.length-1]),
     			realpath: books[books.length-1],
@@ -159,7 +159,7 @@ var loadBooks = function(books,next){
           added: new Date(),
           md5: hash.digest('hex')
     		};
-        
+
         io.emit('scan', 'Reading '+book.metadata.title);
         db.find({ md5: book.md5 }, function (err, doc) {
           if(!doc.length) {
@@ -175,16 +175,16 @@ var loadBooks = function(books,next){
                       if(text) {
                         chapter = striptags(text);
                       }
-                      
+
                       chapter_string = chapter.replace(/ /g,'');
                       chapter_string = chapter_string.replace(/\n/g,'');
                       charCount += chapter_string.length;
-                      
+
                       chapter = chapter.replace(/[.,?¿¡!;()"'-]/g, ' ')
                       .replace(/\s+/g, ' ')
                       .toLowerCase()
                       .split(' ');
-                      
+
                       wordCount += chapter.length;
                       if(epub.flow.length === i) {
                         callback(null, {chars:charCount,words:wordCount});
@@ -206,10 +206,10 @@ var loadBooks = function(books,next){
                             //Copy a default image
                             lwip.open(__dirname+'/public/images/default.jpg', function(err, image){
                               image.toBuffer('jpg', function(err, buffer){
-                                  fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                  fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), buffer, function(err) {
                                     image.scale(0.5, function(err, image){
                                       image.toBuffer('jpg', function(err, buffer){
-                                          fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                          fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) {
                                             //next
                                             books.pop();
                                             loadBooks(books,next);
@@ -221,11 +221,11 @@ var loadBooks = function(books,next){
                             });
                           } else {
               			        if(mimeType == 'image/jpeg') {
-              			        	fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), data, function(err) { 
+              			        	fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), data, function(err) {
                                 lwip.open(__dirname+'/covers/original/'+newDoc._id+'.jpg', function(err, image){
                                   image.scale(0.5, function(err, image){
                                     image.toBuffer('jpg', function(err, buffer){
-                                        fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                        fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) {
                                           //next
                                           books.pop();
                                           loadBooks(books,next);
@@ -241,10 +241,10 @@ var loadBooks = function(books,next){
                     //Copy a default image
                     lwip.open(__dirname+'/public/images/default.jpg', function(err, image){
                       image.toBuffer('jpg', function(err, buffer){
-                          fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                          fs.writeFile(path.join(__dirname+'/covers/original/'+newDoc._id+'.jpg'), buffer, function(err) {
                             image.scale(0.5, function(err, image){
                               image.toBuffer('jpg', function(err, buffer){
-                                  fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) { 
+                                  fs.writeFile(path.join(__dirname+'/covers/small/'+newDoc._id+'.jpg'), buffer, function(err) {
                                     //next
                                     books.pop();
                                     loadBooks(books,next);
@@ -255,18 +255,36 @@ var loadBooks = function(books,next){
                       });
                     });
                   }
-                  
+
             		});
             });
         } else {
                 //next
                 books.pop();
                 loadBooks(books,next);
-            } 
+            }
       });
     });
 	});
 	epub.parse();
+};
+
+var checkBooks = function (next) {
+  console.log('DELETED BOOKS');
+  db.find({ }, function (err, docs) {
+    for (var i = 0; i < docs.length; i++) {
+      try {
+          fs.accessSync(docs[i].realpath, fs.F_OK);
+          db.update({ _id: docs[i]._id }, { $set: { deleted: false } }, function (err) { });
+          // Do something
+      } catch (e) {
+          // It isn't accessible
+          console.log(docs[i].realpath);
+          db.update({ _id: docs[i]._id }, { $set: { deleted: true } }, function (err) { });
+      }
+    }
+    next();
+  });
 };
 
 var scan = function (next) {
