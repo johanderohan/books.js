@@ -99,6 +99,20 @@ var app = module.exports.app = express();
     });
 	});
 
+  app.delete('/api/trash', function (req, res) {
+      db.find({ deleted: true }, function (err, docs) {
+        async.each(docs, function(file, callback) {
+            db.remove({ _id: file._id }, {}, function (err, numRemoved) {
+              callback();
+            });
+        }, function(err){
+          db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+            res.send(docs);
+          });
+        });
+      });
+	});
+
   app.post('/api/liked/:id', function (req, res) {
     db.update({ _id: req.params.id }, { $set: { like: true } }, function (err) {
       if (err) res.sendStatus(400);

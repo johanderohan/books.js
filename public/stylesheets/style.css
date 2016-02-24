@@ -57,8 +57,17 @@ div.sidebar-menu .col-xs-12.header {
   padding-top: 5px;
   cursor: default;
 }
+
+div.sidebar-menu .col-xs-12.bottom {
+  bottom: 50px;
+  display: block;
+  position: absolute;
+  border-top: 1px solid #eee;
+}
 div.sidebar-menu .row {
   margin: 0;
+  height: 100%;
+  position: absolute;
 }
 
 div.sidebar-menu .col-xs-12 {

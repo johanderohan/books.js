@@ -91,6 +91,12 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
       });
   };
 
+  $scope.emptyTrash = function(){
+      $http.delete('/api/trash/').success(function(data){
+        $rootScope.books = data;
+      });
+  };
+
   $scope.search = function(){
     $http.post('/search',{ search: $scope.searchValue }).success(function(data){
         $rootScope.books = data;
