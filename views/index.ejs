@@ -59,6 +59,54 @@
               Title
             </div>
          </div>
+         <div class="col-xs-12" ng-click="reOrder('added')">
+           <div class="col-xs-1 icon">
+               <span ng-class="order == 'added' ? 'ion-ios-checkmark-outline' : 'ion-ios-circle-outline'"></span>
+            </div>
+            <div class="col-xs-10 name">
+              Added
+            </div>
+         </div>
+         <div class="col-xs-12 header item">
+           <div class="col-xs-1 icon">
+               <span class="ion-ios-arrow-down"></span>
+            </div>
+            <div class="col-xs-10 name">
+              Filter
+            </div>
+         </div>
+         <div class="col-xs-12" ng-click="filtred('all')">
+           <div class="col-xs-1 icon">
+               <span ng-class="filter == 'all' ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></span>
+            </div>
+            <div class="col-xs-10 name">
+              All
+            </div>
+         </div>
+         <div class="col-xs-12" ng-click="filtred('reading')">
+           <div class="col-xs-1 icon">
+               <span ng-class="filter == 'reading' ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></span>
+            </div>
+            <div class="col-xs-10 name">
+              Reading
+            </div>
+         </div>
+         <div class="col-xs-12" ng-click="filtred('readed')">
+           <div class="col-xs-1 icon">
+               <span ng-class="filter == 'readed' ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></span>
+            </div>
+            <div class="col-xs-10 name">
+              Readed
+            </div>
+         </div>
+         <div class="col-xs-12" ng-click="filtred('fav')">
+           <div class="col-xs-1 icon">
+               <span ng-class="filter == 'fav' ? 'ion-ios-circle-filled' : 'ion-ios-circle-outline'"></span>
+            </div>
+            <div class="col-xs-10 name">
+              Favorites
+            </div>
+         </div>
 
          <div class="col-xs-12 bottom" ng-click="emptyTrash()">
            <div class="col-xs-1 icon">

@@ -58,6 +58,10 @@ div.sidebar-menu .col-xs-12.header {
   cursor: default;
 }
 
+div.sidebar-menu .col-xs-12.item {
+  border-top: 1px solid #eee;
+}
+
 div.sidebar-menu .col-xs-12.bottom {
   bottom: 50px;
   display: block;

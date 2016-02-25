@@ -73,20 +73,68 @@ var app = module.exports.app = express();
 	});
 
   app.post('/api/books', function (req, res) {
-    if(req.body.order === 'title') {
-      db.find().sort({ 'metadata.title': 1, 'metadata.date': 1 }).exec(function (err, docs) {
-        res.send(docs);
-      });
-    } else {
-      db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
-        res.send(docs);
-      });
+    if(req.body.filter === 'all') {
+      if(req.body.order === 'title') {
+        db.find().sort({ 'metadata.title': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      } else if(req.body.order === 'autor') {
+        db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      } else if(req.body.order === 'added') {
+        db.find().sort({ 'added': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      }
+    } else if(req.body.filter === 'readed') {
+      if(req.body.order === 'title') {
+        db.find({read: 1}).sort({ 'metadata.title': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      } else if(req.body.order === 'autor') {
+        db.find({read: 1}).sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      } else if(req.body.order === 'added') {
+        db.find({read: 1}).sort({ 'added': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      }
+    } else if(req.body.filter === 'reading') {
+      if(req.body.order === 'title') {
+        db.find({read: 2}).sort({ 'metadata.title': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      } else if(req.body.order === 'autor') {
+        db.find({read: 2}).sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      } else if(req.body.order === 'added') {
+        db.find({read: 2}).sort({ 'added': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      }
+    } else if(req.body.filter === 'fav') {
+      if(req.body.order === 'title') {
+        db.find({like: true}).sort({ 'metadata.title': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      } else if(req.body.order === 'autor') {
+        db.find({like: true}).sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      } else if(req.body.order === 'added') {
+        db.find({like: true}).sort({ 'added': 1, 'metadata.date': 1 }).exec(function (err, docs) {
+          res.send(docs);
+        });
+      }
     }
 	});
 
   //Reading will be another state {read:2}
   app.post('/api/readed/:id', function (req, res) {
-    db.update({ _id: req.params.id }, { $set: { read: 1 } }, function (err) {
+    db.update({ _id: req.params.id }, { $set: { read: req.body.status } }, function (err) {
       if (err) res.sendStatus(400);
       else res.sendStatus(200);
     });
@@ -171,7 +219,8 @@ var loadBooks = function(books,next){
     			realpath: books[books.length-1],
     			metadata: epub.metadata,
           added: new Date(),
-          md5: hash.digest('hex')
+          md5: hash.digest('hex'),
+          read: 0
     		};
 
         io.emit('scan', 'Reading '+book.metadata.title);

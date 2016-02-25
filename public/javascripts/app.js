@@ -53,10 +53,12 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
   $scope.active = false;
   $scope.side = '';
   $scope.order = 'autor';
+  $scope.filter = 'all';
   $rootScope.isBooks = false;
   $rootScope.isHome = true;
   $rootScope.isSearch = false;
   $rootScope.orderID = 0;
+  $rootScope.filterID = 0;
 
   $rootScope.$on('$routeChangeSuccess', function () {
     if($location.path() === '/') { $rootScope.isHome = true; }
@@ -85,8 +87,20 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
   $scope.reOrder = function(id){
       if(id === 'autor') $rootScope.orderID = 0;
       if(id === 'title') $rootScope.orderID = 1;
+      if(id === 'added') $rootScope.orderID = 2;
       $scope.order = id;
-      $http.post('/api/books/', {order: $scope.order}).success(function(data){
+      $http.post('/api/books/', {order: $scope.order, filter: $scope.filter}).success(function(data){
+        $rootScope.books = data;
+      });
+  };
+  
+  $scope.filtred = function(id){
+      if(id === 'all') $rootScope.filterID = 0;
+      if(id === 'readed') $rootScope.filterID = 1;
+      if(id === 'reading') $rootScope.filterID = 2;
+      if(id === 'fav') $rootScope.filterID = 3;
+      $scope.filter = id;
+      $http.post('/api/books/', {order: $scope.order, filter: $scope.filter}).success(function(data){
         $rootScope.books = data;
       });
   };
@@ -161,9 +175,12 @@ var myApp = angular.module('booksApp',['ngRoute','ui.bootstrap','angularLazyImg'
   };
 
   $scope.markRead = function(value) {
-    if(typeof value === 'undefined' || !value) {
-      $http.post('/api/readed/'+$routeParams.id).success(function(){
-        $scope.book.read = true;
+    value = value + 1;
+    if (value > 2) value = 0;
+    
+    if(value) {
+      $http.post('/api/readed/'+$routeParams.id,{status: value}).success(function(){
+        $scope.book.read = value;
       });
     } else {
       $http.delete('/api/readed/'+$routeParams.id).success(function(){

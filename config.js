@@ -1,4 +1,4 @@
 
 module.exports = {
-	library:'/Users/johan/Documents/Libros'
+	library:'/Users/johan/Dropbox/Libros'
 };
