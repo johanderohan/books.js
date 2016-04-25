@@ -51,7 +51,7 @@ var app = module.exports.app = express();
       scanning = true;
       scan(function(){
         io.emit('stops');
-        db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).skip(0).limit(12).exec(function (err, docs) {
+        db.find().sort({ 'metadata.creator': 1, 'metadata.date': 1 }).exec(function (err, docs) {
           scanning = false;
           res.send(docs);
         });
